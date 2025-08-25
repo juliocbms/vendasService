@@ -1,5 +1,6 @@
 package com.microservico.vendas.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class Pedido {
     private LocalDateTime dataPedido;
     private Status status;
     private Double valorTotal;
+    private String descricao;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itensList;
@@ -25,13 +27,14 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Long id, UUID clientId, LocalDateTime dataPedido, Status status, Double valorTotal, List<ItemPedido> itensList) {
+    public Pedido(Long id, UUID clientId, LocalDateTime dataPedido, Status status, Double valorTotal, List<ItemPedido> itensList, String descricao) {
         this.id = id;
         this.clientId = clientId;
         this.dataPedido = dataPedido;
         this.status = status;
         this.valorTotal = valorTotal;
         this.itensList = itensList;
+        this.descricao = descricao;
     }
 
     public Long getId() {
@@ -80,6 +83,14 @@ public class Pedido {
 
     public void setItensList(List<ItemPedido> itensList) {
         this.itensList = itensList;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     @Override
