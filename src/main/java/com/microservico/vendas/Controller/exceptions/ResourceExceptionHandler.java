@@ -33,7 +33,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(EstoqueInsuficienteException.class)
     public ResponseEntity<StandardError> estoqueInsuficiente(EstoqueInsuficienteException e, HttpServletRequest request){
         String error = "Business rule validation error";
-        HttpStatus status = HttpStatus.BAD_REQUEST; // 400 Bad Request
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
