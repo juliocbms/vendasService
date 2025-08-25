@@ -3,7 +3,14 @@ package com.microservico.vendas.Services;
 import com.microservico.vendas.Entities.ItemPedido;
 import com.microservico.vendas.Entities.Pedido;
 import com.microservico.vendas.Repository.PedidoRepository;
+import com.microservico.vendas.Services.exceptions.DatabaseException;
+import com.microservico.vendas.Services.exceptions.EstoqueInsuficienteException;
+import com.microservico.vendas.Services.exceptions.ResourceNotFoundException;
+import com.microservico.vendas.clients.EstoqueCliente;
+import feign.FeignException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +21,32 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
 
-    public Pedido salvarPedido(Pedido pedido){
+    @Autowired
+    private EstoqueCliente estoqueCliente;
 
-        if (pedido.getItensList() != null){
-            for (ItemPedido item : pedido.getItensList()){
-                item.setPedido(pedido);
+    @Transactional
+    public Pedido salvarPedido(Pedido pedido) {
+        for (ItemPedido item : pedido.getItensList()) {
+            try {
+                System.out.println("Validando produto ID: " + item.getProdutoId() + ", Quantidade: " + item.getQuantidade());
+                estoqueCliente.validarDisponibilidade(
+                        item.getProdutoId(),
+                        item.getQuantidade()
+                );
+            } catch (FeignException e) {
+                if (e.status() == 404) {
+                    throw new ResourceNotFoundException("O produto com ID " + item.getProdutoId() + " não foi encontrado.");
+                } else if (e.status() == 400) {
+                    throw new EstoqueInsuficienteException("Estoque insuficiente para o produto com ID " + item.getProdutoId());
+                } else {
+                    throw new DatabaseException("Ocorreu um erro na comunicação com o serviço de estoque para o produto ID " + item.getProdutoId());
+                }
             }
         }
-        return  pedidoRepository.save(pedido);
+        for (ItemPedido item : pedido.getItensList()) {
+            item.setPedido(pedido);
+        }
+        return pedidoRepository.save(pedido);
     }
 
     public List<Pedido> listarPedidos(){
