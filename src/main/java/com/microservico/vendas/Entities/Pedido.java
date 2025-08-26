@@ -3,6 +3,7 @@ package com.microservico.vendas.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +18,9 @@ public class Pedido {
     private Long id;
     private UUID clientId;
     private LocalDateTime dataPedido;
+    @Enumerated(EnumType.STRING)
     private Status status;
-    private Double valorTotal;
-    private String descricao;
+    private BigDecimal valorTotal;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itensList;
@@ -27,14 +28,13 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Long id, UUID clientId, LocalDateTime dataPedido, Status status, Double valorTotal, List<ItemPedido> itensList, String descricao) {
+    public Pedido(Long id, UUID clientId, LocalDateTime dataPedido, Status status, BigDecimal valorTotal, List<ItemPedido> itensList, String descricao) {
         this.id = id;
         this.clientId = clientId;
         this.dataPedido = dataPedido;
         this.status = status;
         this.valorTotal = valorTotal;
         this.itensList = itensList;
-        this.descricao = descricao;
     }
 
     public Long getId() {
@@ -69,11 +69,11 @@ public class Pedido {
         this.status = status;
     }
 
-    public Double getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(Double valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -83,14 +83,6 @@ public class Pedido {
 
     public void setItensList(List<ItemPedido> itensList) {
         this.itensList = itensList;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.microservico.vendas.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +15,7 @@ public class ItemPedido {
     private Long id;
     private Long produtoId;
     private int quantidade;
-    private int subtotal;
+    private BigDecimal subtotal;
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
@@ -25,7 +26,7 @@ public class ItemPedido {
     public ItemPedido() {
     }
 
-    public ItemPedido(Long id, Long produtoId, int quantidade, int subtotal, Pedido pedido) {
+    public ItemPedido(Long id, Long produtoId, int quantidade, BigDecimal subtotal, Pedido pedido) {
         this.id = id;
         this.produtoId = produtoId;
         this.quantidade = quantidade;
@@ -57,11 +58,11 @@ public class ItemPedido {
         this.quantidade = quantidade;
     }
 
-    public int getSubtotal() {
+    public BigDecimal getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal(int subtotal) {
+    public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
 
