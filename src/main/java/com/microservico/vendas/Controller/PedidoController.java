@@ -19,10 +19,6 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-
-    @Value("${broker.queue.processamento.name}")
-    private String routingKey;
-
     @PostMapping()
     public ResponseEntity<Pedido> criarPedido(@RequestBody Pedido pedido) {
         Pedido pedidoSalvo = pedidoService.salvarPedido(pedido);
