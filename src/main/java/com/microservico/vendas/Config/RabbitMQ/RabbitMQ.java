@@ -1,4 +1,4 @@
-package com.microservico.vendas.Config;
+package com.microservico.vendas.Config.RabbitMQ;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
