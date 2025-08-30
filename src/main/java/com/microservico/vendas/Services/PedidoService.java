@@ -1,5 +1,6 @@
 package com.microservico.vendas.Services;
 
+import com.microservico.vendas.Config.Security.Service.AuthenticationService;
 import com.microservico.vendas.Entities.ItemPedido;
 import com.microservico.vendas.Entities.Pedido;
 import com.microservico.vendas.Entities.Status;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PedidoService {
@@ -31,6 +34,9 @@ public class PedidoService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @Value("${broker.exchange.vendas.name}")
     private String exchangeVendas;
@@ -77,6 +83,15 @@ public class PedidoService {
 
     public List<Pedido> listarPedidos(){
        return pedidoRepository.findAll();
+    }
+
+    public List<Pedido> findPedidosDoUsuarioLogado() {
+        UUID usuarioId = authenticationService.getAuthenticatedUserId();
+        return pedidoRepository.findByClientId(usuarioId);
+    }
+
+    public Optional<Pedido> findById(Long id){
+        return pedidoRepository.findById(id);
     }
 
     public void atualizarStatusPedido(Long id, Status status) {

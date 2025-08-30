@@ -33,11 +33,9 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (decodedJWT != null) {
                 String userId = decodedJWT.getSubject();
                 var roles = decodedJWT.getClaim("roles").asList(String.class);
-
                 var authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
                 var authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

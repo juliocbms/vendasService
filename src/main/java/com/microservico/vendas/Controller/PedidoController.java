@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -26,7 +28,14 @@ public class PedidoController {
     }
 
     @GetMapping()
-    public List<Pedido> listarPedidos(){
-        return  pedidoService.listarPedidos();
+    public ResponseEntity<List<Pedido>> listarPedidos(){
+        List<Pedido> pedidos =  pedidoService.listarPedidos();
+        return ResponseEntity.ok(pedidos);
+    }
+
+    @GetMapping("/meus-pedidos")
+    public ResponseEntity<List<Pedido>> findMeusPedidos() {
+        List<Pedido> pedidos = pedidoService.findPedidosDoUsuarioLogado();
+        return ResponseEntity.ok(pedidos);
     }
 }
