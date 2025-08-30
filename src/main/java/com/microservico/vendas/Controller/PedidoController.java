@@ -25,7 +25,7 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pedidoSalvo);
     }
 
-    @GetMapping
+    @GetMapping()
     public List<Pedido> listarPedidos(){
         return  pedidoService.listarPedidos();
     }
